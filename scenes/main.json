@@ -1,0 +1,54 @@
+{
+  "name": "Main",
+  "version": "1.0",
+  "mode": "2d",
+  "root": {
+    "id": "root",
+    "name": "Root",
+    "type": "Node",
+    "visible": true,
+    "children": [
+      {
+        "id": "cam1",
+        "name": "Camera2D",
+        "type": "Camera2D",
+        "visible": true,
+        "position": { "x": 0, "y": 0 },
+        "rotation": 0,
+        "scale": { "x": 1, "y": 1 },
+        "current": true,
+        "zoom": { "x": 1, "y": 1 },
+        "offset": { "x": 0, "y": 0 },
+        "children": []
+      },
+      {
+        "id": "title",
+        "name": "Title",
+        "type": "Label",
+        "visible": true,
+        "position": { "x": -80, "y": -40 },
+        "rotation": 0,
+        "scale": { "x": 1, "y": 1 },
+        "text": "XMZ CREATE",
+        "fontSize": 32,
+        "color": { "r": 1, "g": 1, "b": 1, "a": 1 },
+        "fontFamily": "Inter, sans-serif",
+        "children": []
+      },
+      {
+        "id": "btn1",
+        "name": "PlayButton",
+        "type": "Button",
+        "visible": true,
+        "position": { "x": -60, "y": 20 },
+        "rotation": 0,
+        "scale": { "x": 1, "y": 1 },
+        "text": "Start Game",
+        "size": { "x": 120, "y": 36 },
+        "bgColor": { "r": 0.42, "g": 0.36, "b": 0.9, "a": 1 },
+        "textColor": { "r": 1, "g": 1, "b": 1, "a": 1 },
+        "children": []
+      }
+    ]
+  }
+}
