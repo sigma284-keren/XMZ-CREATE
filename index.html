@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>XMZ CREATE — Web Game Engine</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+  <header id="topbar">
+    <div class="logo">
+      <span class="logo-icon"><i class="fa-solid fa-diamond"></i></span>
+      <span class="logo-text">XMZ CREATE</span>
+    </div>
+    <nav class="menu">
+      <button class="menu-btn" data-action="new" title="New"><i class="fa-solid fa-file"></i><span class="btn-label"> New</span></button>
+      <button class="menu-btn" data-action="open" title="Open"><i class="fa-solid fa-folder-open"></i><span class="btn-label"> Open</span></button>
+      <button class="menu-btn" data-action="save" title="Save"><i class="fa-solid fa-floppy-disk"></i><span class="btn-label"> Save</span></button>
+      <button class="menu-btn primary" data-action="export" title="Export"><i class="fa-solid fa-file-zipper"></i><span class="btn-label"> Export</span></button>
+      <button class="menu-btn" data-action="play" title="Play"><i class="fa-solid fa-play"></i><span class="btn-label"> Play</span></button>
+      <button class="menu-btn" data-action="stop" title="Stop"><i class="fa-solid fa-stop"></i><span class="btn-label"> Stop</span></button>
+    </nav>
+    <div class="mode-switch">
+      <button class="mode-btn active" data-mode="2d">2D</button>
+      <button class="mode-btn" data-mode="3d">3D</button>
+    </div>
+    <div class="mobile-panel-toggles">
+      <button class="menu-btn" id="toggle-left-panel" title="Assets / Scene"><i class="fa-solid fa-folder-open"></i></button>
+      <button class="menu-btn" id="toggle-right-panel" title="Inspector / Script"><i class="fa-solid fa-sliders"></i></button>
+    </div>
+    <button class="menu-btn" id="mobile-controls-toggle" title="Toggle Mobile Controls">
+      <i class="fa-solid fa-gamepad"></i> Controls
+    </button>
+    <button class="menu-btn rotate-btn" id="rotate-btn" title="Rotate + Fullscreen (Landscape)">
+      <span class="rotate-icon"><i class="fa-solid fa-rotate-right"></i></span>
+      <span class="rotate-label">Rotate</span>
+    </button>
+  </header>
+
+  <div id="workspace">
+
+    <aside id="sidebar-left">
+      <div class="panel">
+        <div class="panel-header">
+          <span>Scene Tree</span>
+          <button class="icon-btn" id="add-node-btn" title="Add Node"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div id="scene-tree" class="tree"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <span>Assets</span>
+          <label class="icon-btn" title="Upload Asset">
+            <i class="fa-solid fa-upload"></i>
+            <input type="file" id="asset-upload" accept="image/*,audio/*,.mp3,.wav,.ogg,.m4a,.json,.js,.glsl" hidden multiple />
+          </label>
+        </div>
+        <div id="memory-bar" class="memory-bar">
+          <div class="memory-top">
+            <span><i class="fa-solid fa-microchip"></i> Memory</span>
+            <span id="memory-text">0 / 4.5 MB</span>
+          </div>
+          <div class="memory-track">
+            <div id="memory-fill" class="memory-fill"></div>
+          </div>
+        </div>
+        <div id="asset-list" class="asset-grid"></div>
+      </div>
+      <div class="panel" id="bg-panel">
+        <div class="panel-header">
+          <span><i class="fa-solid fa-image"></i> Background</span>
+        </div>
+        <div class="bg-settings">
+          <div class="prop-row">
+            <label>Color</label>
+            <input type="color" id="bg-color" value="#111111" />
+          </div>
+          <div class="prop-row">
+            <label>Fit</label>
+            <select id="bg-fit">
+              <option value="cover">Cover</option>
+              <option value="contain">Contain</option>
+              <option value="stretch">Stretch</option>
+            </select>
+          </div>
+          <div class="prop-row">
+            <label>Image</label>
+            <select id="bg-image-select">
+              <option value="">(none)</option>
+            </select>
+          </div>
+          <button type="button" class="menu-btn" id="bg-clear" style="width:100%;margin-top:6px">Clear Image</button>
+        </div>
+      </div>
+      <div class="panel" id="mobile-controls-panel">
+        <div class="panel-header">
+          <span><i class="fa-solid fa-mobile-screen-button"></i> Mobile Controls</span>
+        </div>
+        <div class="mobile-settings">
+          <label class="check-row">
+            <input type="checkbox" id="mc-enabled" checked />
+            <span>Show on Play</span>
+          </label>
+          <label class="check-row">
+            <input type="checkbox" id="mc-always" />
+            <span>Always visible</span>
+          </label>
+          <div class="prop-row" style="margin-top:8px">
+            <label>Preset</label>
+            <select id="mc-preset">
+              <option value="platformer">Platformer</option>
+              <option value="leftright">Left / Right</option>
+              <option value="joystick">Joystick + Actions</option>
+              <option value="full">Full (Joy + D-Pad + Btns)</option>
+            </select>
+          </div>
+          <p class="mc-hint">Joystick &amp; tombol virtual terhubung ke <code>input.getAxis()</code> &amp; <code>input.isActionPressed()</code></p>
+        </div>
+      </div>
+    </aside>
+
+    <main id="viewport-container">
+      <div id="viewport-toolbar">
+        <span id="fps-counter">FPS: --</span>
+        <span id="mode-label">Mode: 2D</span>
+        <span id="orient-label">Portrait</span>
+        <div id="tools-3d" class="tools-3d hidden">
+          <button type="button" class="tool-3d active" data-tool="translate" title="Move (G)"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
+          <button type="button" class="tool-3d" data-tool="rotate" title="Rotate (R)"><i class="fa-solid fa-rotate"></i></button>
+          <button type="button" class="tool-3d" data-tool="scale" title="Scale (S)"><i class="fa-solid fa-maximize"></i></button>
+          <button type="button" class="tool-3d" data-tool="orbit" title="Orbit Camera"><i class="fa-solid fa-camera-rotate"></i></button>
+        </div>
+      </div>
+      <div id="viewport-stage" style="position:relative;flex:1;width:100%;min-height:0;">
+        <canvas id="viewport" class="viewport-canvas"></canvas>
+        <canvas id="viewport3d" class="viewport-canvas" style="display:none;"></canvas>
+      </div>
+      <div id="play-overlay" class="hidden">
+        <div class="play-info"><i class="fa-solid fa-gamepad"></i> Playing... ESC / Stop to exit</div>
+      </div>
+
+      <div id="mobile-controls" class="mobile-controls hidden" aria-label="Mobile game controls">
+
+        <div class="mc-left">
+          <div id="mc-dpad" class="mc-dpad hidden">
+            <button class="mc-btn mc-dir" data-action="up" data-dir="up"><i class="fa-solid fa-caret-up"></i></button>
+            <div class="mc-dpad-mid">
+              <button class="mc-btn mc-dir" data-action="left" data-dir="left"><i class="fa-solid fa-caret-left"></i></button>
+              <button class="mc-btn mc-dir" data-action="right" data-dir="right"><i class="fa-solid fa-caret-right"></i></button>
+            </div>
+            <button class="mc-btn mc-dir" data-action="down" data-dir="down"><i class="fa-solid fa-caret-down"></i></button>
+          </div>
+          <div id="mc-joystick" class="mc-joystick">
+            <div class="mc-joy-base">
+              <div class="mc-joy-stick" id="mc-joy-stick"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mc-right">
+          <button class="mc-btn mc-action mc-jump" data-action="jump" title="Jump">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Jump</span>
+          </button>
+          <button class="mc-btn mc-action mc-dash" data-action="dash" title="Dash">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Dash</span>
+          </button>
+          <button class="mc-btn mc-action mc-attack" data-action="attack" title="Attack">
+            <i class="fa-solid fa-hand-fist"></i>
+            <span>Atk</span>
+          </button>
+          <button class="mc-btn mc-action mc-skill" data-action="skill" title="Skill">
+            <i class="fa-solid fa-star"></i>
+            <span>Skill</span>
+          </button>
+          <button class="mc-btn mc-action mc-action-btn" data-action="action" title="Action">
+            <i class="fa-solid fa-circle-dot"></i>
+            <span>Act</span>
+          </button>
+        </div>
+      </div>
+
+      <button id="float-rotate-btn" class="float-rotate" title="Rotate + Fullscreen">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+    </main>
+
+    <aside id="sidebar-right">
+      <div class="panel">
+        <div class="panel-header">Inspector</div>
+        <div id="inspector" class="inspector-content">
+          <p class="placeholder">Select a node to inspect</p>
+        </div>
+      </div>
+      <div class="panel script-panel">
+        <div class="panel-header">
+          <span>Script Editor</span>
+          <button class="icon-btn" id="run-script-btn" title="Run Script"><i class="fa-solid fa-play"></i></button>
+        </div>
+        <textarea id="script-editor" spellcheck="false" placeholder="function _ready() {
+  console.log('Node ready!');
+}
+
+function _process(delta) {
+}"></textarea>
+      </div>
+    </aside>
+  </div>
+
+  <footer id="console">
+    <div class="console-header">
+      <span>Output</span>
+      <button class="icon-btn" id="clear-console">Clear</button>
+    </div>
+    <div id="console-output"></div>
+  </footer>
+
+  <div id="modal-add-node" class="modal hidden">
+    <div class="modal-content">
+      <h3>Add Node</h3>
+      <div class="node-types">
+        <button data-type="Node2D">Node2D</button>
+        <button data-type="Sprite2D">Sprite2D</button>
+        <button data-type="Camera2D">Camera2D</button>
+        <button data-type="Label">Label</button>
+        <button data-type="Button">Button</button>
+        <button data-type="Node3D">Node3D</button>
+        <button data-type="MeshInstance3D">MeshInstance3D</button>
+        <button data-type="Camera3D">Camera3D</button>
+        <button data-type="Light3D">Light3D</button>
+        <button data-type="Script">Script</button>
+      </div>
+      <button class="close-modal">Cancel</button>
+    </div>
+  </div>
+
+  <div id="panel-backdrop" class="panel-backdrop hidden"></div>
+  <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+    <button type="button" data-panel="left"><i class="fa-solid fa-sitemap"></i><span>Scene</span></button>
+    <button type="button" data-panel="none" class="active"><i class="fa-solid fa-gamepad"></i><span>View</span></button>
+    <button type="button" data-panel="right"><i class="fa-solid fa-sliders"></i><span>Edit</span></button>
+    <button type="button" data-panel="console"><i class="fa-solid fa-terminal"></i><span>Log</span></button>
+  </nav>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

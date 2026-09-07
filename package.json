@@ -1,0 +1,24 @@
+{
+  "name": "xmz-create",
+  "version": "1.0.0",
+  "description": "XMZ CREATE — Web-based Game Engine (Godot-like) with 2D/3D support",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve .",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "game-engine",
+    "godot",
+    "webgl",
+    "threejs",
+    "vercel",
+    "xmz"
+  ],
+  "author": "XMZ CREATE",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
