@@ -77,7 +77,7 @@ async function init() {
 
     updateMemoryUI();
     log('XMZ CREATE ready', 'success');
-    log('Upload asset = Memory (localStorage), bukan server', 'info');
+    log('Upload asset = Memory', 'info');
   } catch (err) {
     console.error(err);
     const msg = 'INIT ERROR: ' + (err && err.message ? err.message : err);
